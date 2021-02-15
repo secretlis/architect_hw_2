@@ -1,0 +1,58 @@
+from sanic import Blueprint
+from sanic.exceptions import InvalidUsage, NotFound
+from sanic.response import json
+
+from db import User, DATABASE_URI, db
+
+users = Blueprint('user', url_prefix='/user')
+
+
+@users.middleware('request')
+async def connect_to_db(request):
+    await db.set_bind(DATABASE_URI)
+
+
+@users.middleware('response')
+async def rm_db_connection(request, response):
+    try:
+        await db.pop_bind().close()
+    except:
+        pass
+
+
+@users.route("/<user_id>", methods=["GET"])
+async def get_user(request, user_id):
+    user = await User.get(int(user_id))
+    if not user:
+        raise NotFound(message='User not found')
+    return json({"result": user.to_dict()})
+
+
+@users.route("/<user_id>", methods=["PUT"])
+async def update_user(request, user_id):
+    name = request.form.get('name')
+    user = await User.get(int(user_id))
+    if not user:
+        raise NotFound(message='User not found')
+    if name:
+        await user.update(name=name).apply()
+    return json({"result": user.to_dict()})
+
+
+@users.route("/", methods=["POST"])
+async def create_user(request):
+    if not request.form.get('name'):
+        raise InvalidUsage(message="name not found in %s" % str(request.form))
+    name = request.form.get('name')
+    user = await User.create(name=name)
+    return json({"result": user.to_dict()})
+
+
+@users.route("/<user_id>", methods=["DELETE"])
+async def rm_user(request, user_id):
+    user = await User.get(int(user_id))
+    if not user:
+        raise NotFound(message='User not found')
+    await user.delete()
+    return json({"result": 'ok'})
+
