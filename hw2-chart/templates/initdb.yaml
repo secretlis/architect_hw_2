@@ -37,7 +37,7 @@ spec:
               do echo waiting for database; sleep 2; done;
       containers:
         - name: post-install-job
-          image: hw2-local:v1
+          image: alia1221/hw2:v1
           env:
             - name: DATABASE_URI
               valueFrom:
