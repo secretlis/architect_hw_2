@@ -1,5 +1,4 @@
 # Byte-compiled / optimized / DLL files
-/hw2-chart/values.yaml
 __pycache__/
 *.py[cod]
 *$py.class

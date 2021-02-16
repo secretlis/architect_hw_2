@@ -1,0 +1,17 @@
+replicaCount: 2
+
+image:
+  repository: alia1221/hw2
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 9000
+
+postgresql:
+  enabled: true
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: dbhw2
+  service:
+    port: "5432"
