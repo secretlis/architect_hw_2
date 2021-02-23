@@ -15,3 +15,13 @@ postgresql:
   postgresqlDatabase: dbhw2
   service:
     port: "5432"
+
+metrics:
+  serviceMonitor:
+    enabled: true
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: ["/app"]

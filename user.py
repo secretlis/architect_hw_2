@@ -2,22 +2,9 @@ from sanic import Blueprint
 from sanic.exceptions import InvalidUsage, NotFound
 from sanic.response import json
 
-from db import User, DATABASE_URI, db
+from db import User
 
 users = Blueprint('user', url_prefix='/user')
-
-
-@users.middleware('request')
-async def connect_to_db(request):
-    await db.set_bind(DATABASE_URI)
-
-
-@users.middleware('response')
-async def rm_db_connection(request, response):
-    try:
-        await db.pop_bind().close()
-    except:
-        pass
 
 
 @users.route("/<user_id>", methods=["GET"])

@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 sanic = "==20.12.1"
 gino = "==1.0.1"
+sanic-prometheus = "==0.2.1"
 
 [dev-packages]
 
